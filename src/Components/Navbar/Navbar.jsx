@@ -28,6 +28,7 @@ const Navbar = () => {
         navigate("/");
         window.location.reload();
     };
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
     return (
         <nav>
@@ -62,9 +63,25 @@ const Navbar = () => {
 
                 {authToken ? (
                     <>
-                        <li className="link user-name">
-                            {displayName}
-                        </li>
+<li className="link profile-menu">
+    <button
+        className="profile-menu-btn"
+        onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+    >
+        {displayName} ▼
+    </button>
+
+    {profileMenuOpen && (
+        <div className="profile-dropdown">
+            <Link
+                to="/profile"
+                onClick={() => setProfileMenuOpen(false)}
+            >
+                My Profile
+            </Link>
+        </div>
+    )}
+</li>
 
                         <li className="link">
                             <button
