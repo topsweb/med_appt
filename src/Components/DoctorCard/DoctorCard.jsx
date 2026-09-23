@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./DoctorCard.css";
 import AppointmentForm from "../AppointmentForm/AppointmentForm";
 
@@ -6,43 +6,79 @@ const DoctorCard = ({ name, speciality, experience, ratings }) => {
     const [showAppointmentForm, setShowAppointmentForm] = useState(false);
     const [appointment, setAppointment] = useState(null);
 
+    const email = sessionStorage.getItem("email");
+
+    const appointmentKey = email
+        ? `appointment:${email}:${name}`
+        : null;
+
+    const doctorKey = email
+        ? `doctorData:${email}`
+        : null;
+
+    // Reload an existing appointment when the DoctorCard is displayed again
+    useEffect(() => {
+        if (!appointmentKey) {
+            setAppointment(null);
+            return;
+        }
+
+        const storedAppointment = localStorage.getItem(appointmentKey);
+
+        if (storedAppointment) {
+            setAppointment(JSON.parse(storedAppointment));
+        } else {
+            setAppointment(null);
+        }
+    }, [appointmentKey]);
+
     const handleBookAppointment = (appointmentData) => {
-    const selectedDoctor = {
-        name,
-        speciality,
-        experience,
-        ratings
+        if (!email) {
+            alert("Please log in before booking an appointment.");
+            return;
+        }
+
+        const selectedDoctor = {
+            name,
+            speciality,
+            experience,
+            ratings
+        };
+
+        setAppointment(appointmentData);
+        setShowAppointmentForm(false);
+
+        localStorage.setItem(
+            doctorKey,
+            JSON.stringify(selectedDoctor)
+        );
+
+        localStorage.setItem(
+            appointmentKey,
+            JSON.stringify(appointmentData)
+        );
+
+        window.dispatchEvent(
+            new Event("appointmentUpdated")
+        );
     };
 
-    setAppointment(appointmentData);
-    setShowAppointmentForm(false);
-
-    localStorage.setItem(
-        "doctorData",
-        JSON.stringify(selectedDoctor)
-    );
-
-    localStorage.setItem(
-        name,
-        JSON.stringify(appointmentData)
-    );
-
-    window.dispatchEvent(
-        new Event("appointmentUpdated")
-    );
-};
-
     const handleCancelAppointment = () => {
-    setAppointment(null);
-    setShowAppointmentForm(false);
+        setAppointment(null);
+        setShowAppointmentForm(false);
 
-    localStorage.removeItem(name);
-    localStorage.removeItem("doctorData");
+        if (appointmentKey) {
+            localStorage.removeItem(appointmentKey);
+        }
 
-    window.dispatchEvent(
-        new Event("appointmentUpdated")
-    );
-};
+        if (doctorKey) {
+            localStorage.removeItem(doctorKey);
+        }
+
+        window.dispatchEvent(
+            new Event("appointmentUpdated")
+        );
+    };
 
     return (
         <div className="doctor-card">
@@ -65,7 +101,14 @@ const DoctorCard = ({ name, speciality, experience, ratings }) => {
                 {!appointment && !showAppointmentForm && (
                     <button
                         className="book-appointment-btn"
-                        onClick={() => setShowAppointmentForm(true)}
+                        onClick={() => {
+                            if (!email) {
+                                alert("Please log in before booking an appointment.");
+                                return;
+                            }
+
+                            setShowAppointmentForm(true);
+                        }}
                     >
                         <div>Book Appointment</div>
                         <div>No Booking Fee</div>

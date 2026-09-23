@@ -10,22 +10,31 @@ const Notification = ({ children }) => {
     const loadAppointment = () => {
         const storedEmail = sessionStorage.getItem("email");
 
+        if (!storedEmail) {
+            setIsLoggedIn(false);
+            setDoctorData(null);
+            setAppointmentData(null);
+            setShowNotification(false);
+            return;
+        }
+
+        setIsLoggedIn(true);
+
+        const doctorKey = `doctorData:${storedEmail}`;
+
         const storedDoctorData = JSON.parse(
-            localStorage.getItem("doctorData")
+            localStorage.getItem(doctorKey)
         );
 
         let storedAppointmentData = null;
 
         if (storedDoctorData?.name) {
-            storedAppointmentData = JSON.parse(
-                localStorage.getItem(storedDoctorData.name)
-            );
-        }
+            const appointmentKey =
+                `appointment:${storedEmail}:${storedDoctorData.name}`;
 
-        if (storedEmail) {
-            setIsLoggedIn(true);
-        } else {
-            setIsLoggedIn(false);
+            storedAppointmentData = JSON.parse(
+                localStorage.getItem(appointmentKey)
+            );
         }
 
         if (storedDoctorData && storedAppointmentData) {
@@ -65,19 +74,23 @@ const Notification = ({ children }) => {
                         <h3>Appointment Details</h3>
 
                         <p>
-                            <strong>Patient:</strong> {appointmentData.name}
+                            <strong>Patient:</strong>{" "}
+                            {appointmentData.name}
                         </p>
 
                         <p>
-                            <strong>Doctor:</strong> {doctorData?.name}
+                            <strong>Doctor:</strong>{" "}
+                            {doctorData?.name}
                         </p>
 
                         <p>
-                            <strong>Date:</strong> {appointmentData.date}
+                            <strong>Date:</strong>{" "}
+                            {appointmentData.date}
                         </p>
 
                         <p>
-                            <strong>Time:</strong> {appointmentData.time}
+                            <strong>Time:</strong>{" "}
+                            {appointmentData.time}
                         </p>
                     </div>
                 </div>
