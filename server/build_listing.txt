@@ -1,0 +1,6 @@
+total 56
+-rw-r--r-- 1 theia users 27443 Sep 23 17:20 patient_report.pdf
+-rw-r--r-- 1 theia users  5031 Sep 23 17:20 icons.svg
+-rw-r--r-- 1 theia users  9522 Sep 23 17:20 favicon.svg
+-rw-r--r-- 1 theia users   848 Sep 23 17:20 index.html
+drwxr-sr-x 2 theia users  4096 Sep 23 17:20 assets
