@@ -55,9 +55,22 @@ const ReportsLayout = () => {
                                     <td>{report.date}</td>
                                     <td>{report.type}</td>
                                     <td>
-                                        <button className="report-view-btn">
+                                        <a
+                                            href="/patient_report.pdf"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="report-view-btn"
+                                        >
                                             View Report
-                                        </button>
+                                        </a>
+
+                                        <a
+                                            href="/patient_report.pdf"
+                                            download="patient_report.pdf"
+                                            className="report-download-btn"
+                                        >
+                                            Download
+                                        </a>
                                     </td>
                                 </tr>
                             ))}
