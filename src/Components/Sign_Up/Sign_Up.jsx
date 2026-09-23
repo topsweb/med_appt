@@ -1,55 +1,45 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import "./Sign_Up.css";
+import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
 
 const Sign_Up = () => {
-    const [formData, setFormData] = useState({
-        role: "",
-        name: "",
-        phone: "",
-        email: "",
-        password: ""
-    });
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
 
+    const [showerr, setShowerr] = useState("");
     const [errors, setErrors] = useState({});
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+    const navigate = useNavigate();
 
     const validateForm = () => {
         const newErrors = {};
 
-        if (!formData.role) {
-            newErrors.role = "Please select a role.";
-        }
-
-        if (!formData.name.trim()) {
+        if (!name.trim()) {
             newErrors.name = "Name is required.";
         }
 
-        if (!/^\d{10}$/.test(formData.phone)) {
+        if (!/^\d{10}$/.test(phone)) {
             newErrors.phone = "Phone number must contain exactly 10 digits.";
         }
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             newErrors.email = "Please enter a valid email address.";
         }
 
-        if (formData.password.length < 6) {
+        if (password.length < 6) {
             newErrors.password = "Password must be at least 6 characters.";
         }
 
         return newErrors;
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const register = async (e) => {
+        e.preventDefault();
+
+        setShowerr("");
 
         const validationErrors = validateForm();
 
@@ -60,14 +50,53 @@ const Sign_Up = () => {
 
         setErrors({});
 
-        sessionStorage.setItem("name", formData.name);
-        sessionStorage.setItem("email", formData.email);
+        try {
+            const response = await fetch(`${API_URL}/api/auth/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                    phone,
+                }),
+            });
 
-        alert("Sign up information is valid.");
+            const json = await response.json();
+
+            if (json.authtoken) {
+                sessionStorage.setItem("auth-token", json.authtoken);
+                sessionStorage.setItem("name", name);
+                sessionStorage.setItem("phone", phone);
+                sessionStorage.setItem("email", email);
+
+                navigate("/");
+                window.location.reload();
+            } else {
+                if (json.errors) {
+                    setShowerr(json.errors[0].msg);
+                } else {
+                    setShowerr(json.error || "Registration failed.");
+                }
+            }
+        } catch (error) {
+            setShowerr("Unable to connect to the server.");
+        }
+    };
+
+    const resetForm = () => {
+        setName("");
+        setEmail("");
+        setPhone("");
+        setPassword("");
+        setErrors({});
+        setShowerr("");
     };
 
     return (
-        <div className="container">
+        <div className="container" style={{ marginTop: "5%" }}>
             <div className="signup-card">
 
                 <h1>Sign Up</h1>
@@ -77,38 +106,16 @@ const Sign_Up = () => {
                     <Link to="/login">Login</Link>
                 </p>
 
-                <form onSubmit={handleSubmit}>
-
-                    <div className="form-group">
-                        <label htmlFor="role">Role</label>
-
-                        <select
-                            id="role"
-                            name="role"
-                            value={formData.role}
-                            onChange={handleChange}
-                            className="form-control"
-                            required
-                        >
-                            <option value="">Select a role</option>
-                            <option value="patient">Patient</option>
-                            <option value="doctor">Doctor</option>
-                        </select>
-
-                        {errors.role && (
-                            <span className="error">{errors.role}</span>
-                        )}
-                    </div>
+                <form method="POST" onSubmit={register}>
 
                     <div className="form-group">
                         <label htmlFor="name">Name</label>
-
                         <input
+                            value={name}
                             type="text"
-                            id="name"
+                            onChange={(e) => setName(e.target.value)}
                             name="name"
-                            value={formData.name}
-                            onChange={handleChange}
+                            id="name"
                             className="form-control"
                             placeholder="Enter your name"
                             required
@@ -121,13 +128,12 @@ const Sign_Up = () => {
 
                     <div className="form-group">
                         <label htmlFor="phone">Phone Number</label>
-
                         <input
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
                             type="tel"
-                            id="phone"
                             name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
+                            id="phone"
                             className="form-control"
                             placeholder="Enter 10 digit phone number"
                             maxLength="10"
@@ -141,13 +147,12 @@ const Sign_Up = () => {
 
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
-
                         <input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             type="email"
-                            id="email"
                             name="email"
-                            value={formData.email}
-                            onChange={handleChange}
+                            id="email"
                             className="form-control"
                             placeholder="Enter your email"
                             required
@@ -156,17 +161,22 @@ const Sign_Up = () => {
                         {errors.email && (
                             <span className="error">{errors.email}</span>
                         )}
+
+                        {showerr && (
+                            <div className="err" style={{ color: "red", marginTop: "5px" }}>
+                                {showerr}
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-
                         <input
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             type="password"
-                            id="password"
                             name="password"
-                            value={formData.password}
-                            onChange={handleChange}
+                            id="password"
                             className="form-control"
                             placeholder="Enter your password"
                             required
@@ -185,19 +195,10 @@ const Sign_Up = () => {
                         <button
                             type="button"
                             className="btn btn-danger"
-                            onClick={() => {
-                                setFormData({
-                                role: "",
-                                name: "",
-                                phone: "",
-                                email: "",
-                                password: ""
-                            });
-                            setErrors({});
-                        }}
-                    >
-                        Reset
-                    </button>
+                            onClick={resetForm}
+                        >
+                            Reset
+                        </button>
                     </div>
 
                 </form>

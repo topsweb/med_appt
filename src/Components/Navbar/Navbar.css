@@ -108,4 +108,7 @@ nav {
         display: flex;
     }
 }
-
+.user-name {
+    font-weight: 600;
+    color: #0d213f;
+}
