@@ -48,9 +48,15 @@ const Navbar = () => {
                     <Link to="/">Home</Link>
                 </li>
 
-                <li className="link">
-                    <a href="#">Appointments</a>
-                </li>
+<li className="link">
+    <a href="#">Appointments</a>
+</li>
+
+<li className="link">
+    <Link to="/instant-consultation">
+        Instant Consultation
+    </Link>
+</li>
 
                 {authToken ? (
                     <>
