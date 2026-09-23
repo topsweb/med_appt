@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./FindDoctorSearch.css";
+import DoctorCard from "../DoctorCard/DoctorCard";
 
 const specialties = [
     "Dentist",
@@ -7,7 +8,32 @@ const specialties = [
     "Gynecologist/Obstetrician",
     "General Physician"
 ];
-
+const doctors = [
+    {
+        name: "Dr. John Smith",
+        speciality: "Dentist",
+        experience: "10 years",
+        ratings: "4.8"
+    },
+    {
+        name: "Dr. Sarah Johnson",
+        speciality: "General Physician",
+        experience: "8 years",
+        ratings: "4.7"
+    },
+    {
+        name: "Dr. Emily Davis",
+        speciality: "Gynecologist/Obstetrician",
+        experience: "12 years",
+        ratings: "4.9"
+    },
+    {
+        name: "Dr. Robert Brown",
+        speciality: "Bone",
+        experience: "15 years",
+        ratings: "4.6"
+    }
+];
 const FindDoctorSearch = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [showSpecialties, setShowSpecialties] = useState(false);
@@ -15,6 +41,13 @@ const FindDoctorSearch = () => {
     const filteredSpecialties = specialties.filter((specialty) =>
         specialty.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    const filteredDoctors = searchTerm
+    ? doctors.filter((doctor) =>
+          doctor.speciality
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+      )
+    : doctors;
 
     const handleSelect = (specialty) => {
         setSearchTerm(specialty);
@@ -65,6 +98,17 @@ const FindDoctorSearch = () => {
                     </ul>
                 )}
             </div>
+            <div className="doctor-cards-container">
+    {filteredDoctors.map((doctor) => (
+        <DoctorCard
+            key={doctor.name}
+            name={doctor.name}
+            speciality={doctor.speciality}
+            experience={doctor.experience}
+            ratings={doctor.ratings}
+        />
+    ))}
+</div>
         </div>
     );
 };
