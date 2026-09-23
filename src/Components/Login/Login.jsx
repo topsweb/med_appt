@@ -1,40 +1,40 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import "./Login.css";
+import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
 
 const Login = () => {
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    });
-
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showerr, setShowerr] = useState("");
     const [errors, setErrors] = useState({});
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
+    const navigate = useNavigate();
 
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+    useEffect(() => {
+        if (sessionStorage.getItem("auth-token")) {
+            navigate("/");
+        }
+    }, [navigate]);
 
     const validateForm = () => {
         const newErrors = {};
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             newErrors.email = "Please enter a valid email address.";
         }
 
-        if (!formData.password) {
+        if (!password) {
             newErrors.password = "Password is required.";
         }
 
         return newErrors;
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const login = async (e) => {
+        e.preventDefault();
+
+        setShowerr("");
 
         const validationErrors = validateForm();
 
@@ -45,9 +45,43 @@ const Login = () => {
 
         setErrors({});
 
-        sessionStorage.setItem("email", formData.email);
+        try {
+            const res = await fetch(`${API_URL}/api/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
+            });
 
-        alert("Login information is valid.");
+            const json = await res.json();
+
+            if (json.authtoken) {
+                sessionStorage.setItem("auth-token", json.authtoken);
+                sessionStorage.setItem("email", email);
+
+                navigate("/");
+                window.location.reload();
+            } else {
+                if (json.errors) {
+                    setShowerr(json.errors[0].msg);
+                } else {
+                    setShowerr(json.error || "Login failed.");
+                }
+            }
+        } catch (error) {
+            setShowerr("Unable to connect to the server.");
+        }
+    };
+
+    const resetForm = () => {
+        setEmail("");
+        setPassword("");
+        setErrors({});
+        setShowerr("");
     };
 
     return (
@@ -61,17 +95,17 @@ const Login = () => {
                     <Link to="/signup">Sign Up Here</Link>
                 </p>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={login}>
 
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
 
                         <input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             type="email"
                             name="email"
                             id="email"
-                            value={formData.email}
-                            onChange={handleChange}
                             className="form-control"
                             placeholder="Enter your email"
                             required
@@ -80,17 +114,29 @@ const Login = () => {
                         {errors.email && (
                             <span className="error">{errors.email}</span>
                         )}
+
+                        {showerr && (
+                            <div
+                                className="err"
+                                style={{
+                                    color: "red",
+                                    marginTop: "5px"
+                                }}
+                            >
+                                {showerr}
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
 
                         <input
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             type="password"
                             name="password"
                             id="password"
-                            value={formData.password}
-                            onChange={handleChange}
                             className="form-control"
                             placeholder="Enter your password"
                             required
@@ -102,23 +148,22 @@ const Login = () => {
                     </div>
 
                     <div className="btn-group">
-                        <button type="submit" className="btn btn-primary">
+
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                        >
                             Login
                         </button>
 
                         <button
                             type="button"
                             className="btn btn-danger"
-                            onClick={() => {
-                                setFormData({
-                                    email: "",
-                                    password: ""
-                                });
-                                setErrors({});
-                            }}
+                            onClick={resetForm}
                         >
                             Reset
                         </button>
+
                     </div>
 
                     <p className="forgot-password">
