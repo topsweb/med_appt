@@ -64,13 +64,20 @@ const ReportsLayout = () => {
                                             View Report
                                         </a>
 
-                                        <a
-                                            href="/patient_report.pdf"
-                                            download="patient_report.pdf"
-                                            className="report-download-btn"
-                                        >
-                                            Download
-                                        </a>
+                                        <button
+    className="report-download-btn"
+    onClick={() => {
+        const link = document.createElement("a");
+        link.href = "/patient_report.pdf";
+        link.download = "patient_report.pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }}
+>
+    Download
+</button>
+                                        
                                     </td>
                                 </tr>
                             ))}
