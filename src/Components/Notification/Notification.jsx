@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Notification.css";
 
-const Notification = () => {
+const Notification = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [doctorData, setDoctorData] = useState(null);
     const [appointmentData, setAppointmentData] = useState(null);
@@ -55,36 +55,34 @@ const Notification = () => {
         };
     }, []);
 
-    if (!isLoggedIn || !showNotification || !appointmentData) {
-        return null;
-    }
-
     return (
-        <div className="appointment-notification">
-            <div className="appointment-card">
-                <h3>Appointment Details</h3>
+        <>
+            {children}
 
-                <p>
-                    <strong>Patient:</strong>{" "}
-                    {appointmentData.name}
-                </p>
+            {isLoggedIn && showNotification && appointmentData && (
+                <div className="appointment-notification">
+                    <div className="appointment-card">
+                        <h3>Appointment Details</h3>
 
-                <p>
-                    <strong>Doctor:</strong>{" "}
-                    {doctorData?.name}
-                </p>
+                        <p>
+                            <strong>Patient:</strong> {appointmentData.name}
+                        </p>
 
-                <p>
-                    <strong>Date:</strong>{" "}
-                    {appointmentData.date}
-                </p>
+                        <p>
+                            <strong>Doctor:</strong> {doctorData?.name}
+                        </p>
 
-                <p>
-                    <strong>Time:</strong>{" "}
-                    {appointmentData.time}
-                </p>
-            </div>
-        </div>
+                        <p>
+                            <strong>Date:</strong> {appointmentData.date}
+                        </p>
+
+                        <p>
+                            <strong>Time:</strong> {appointmentData.time}
+                        </p>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 
