@@ -32,15 +32,15 @@ const Navbar = () => {
                 </li>
 
                 <li className="link">
-                    <a href="#">
+                    <Link to="/signup">
                         <button className="btn secondary">Sign Up</button>
-                    </a>
+                    </Link>
                 </li>
 
                 <li className="link">
-                    <a href="#">
+                    <Link to="/login">
                         <button className="btn primary">Login</button>
-                    </a>
+                    </Link>
                 </li>
             </ul>
         </nav>
