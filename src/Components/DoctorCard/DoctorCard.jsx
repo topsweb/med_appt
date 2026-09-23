@@ -7,14 +7,42 @@ const DoctorCard = ({ name, speciality, experience, ratings }) => {
     const [appointment, setAppointment] = useState(null);
 
     const handleBookAppointment = (appointmentData) => {
-        setAppointment(appointmentData);
-        setShowAppointmentForm(false);
+    const selectedDoctor = {
+        name,
+        speciality,
+        experience,
+        ratings
     };
 
+    setAppointment(appointmentData);
+    setShowAppointmentForm(false);
+
+    localStorage.setItem(
+        "doctorData",
+        JSON.stringify(selectedDoctor)
+    );
+
+    localStorage.setItem(
+        name,
+        JSON.stringify(appointmentData)
+    );
+
+    window.dispatchEvent(
+        new Event("appointmentUpdated")
+    );
+};
+
     const handleCancelAppointment = () => {
-        setAppointment(null);
-        setShowAppointmentForm(false);
-    };
+    setAppointment(null);
+    setShowAppointmentForm(false);
+
+    localStorage.removeItem(name);
+    localStorage.removeItem("doctorData");
+
+    window.dispatchEvent(
+        new Event("appointmentUpdated")
+    );
+};
 
     return (
         <div className="doctor-card">

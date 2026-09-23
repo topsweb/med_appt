@@ -1,0 +1,25 @@
+.appointment-notification {
+    position: fixed;
+    top: 90px;
+    right: 25px;
+    z-index: 1000;
+    width: 300px;
+}
+
+.appointment-card {
+    background-color: #ffffff;
+    border: 1px solid #dfe5ec;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+}
+
+.appointment-card h3 {
+    margin-top: 0;
+    color: #0d213f;
+}
+
+.appointment-card p {
+    margin: 8px 0;
+    color: #444444;
+}
