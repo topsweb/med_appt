@@ -51,7 +51,9 @@ const Navbar = () => {
 <li className="link">
     <Link to="/appointments">Appointments</Link>
 </li>
-
+<li className="link">
+    <Link to="/reviews">Reviews</Link>
+</li>
 <li className="link">
     <Link to="/instant-consultation">
         Instant Consultation
