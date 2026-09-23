@@ -81,3 +81,12 @@
     font-weight: 600;
     color: #0d6b3c;
 }
+.doctor-card-options-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #dddddd;
+}
+
+.doctor-card-options-container h3 {
+    color: #0d213f;
+}

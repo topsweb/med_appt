@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AppointmentForm = ({ doctorName, onClose }) => {
+const AppointmentForm = ({ doctorName, onClose, onBook }) => {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [date, setDate] = useState("");
@@ -22,9 +22,12 @@ const AppointmentForm = ({ doctorName, onClose }) => {
             return;
         }
 
-        setMessage(
-            `Appointment booked with ${doctorName} on ${date} at ${time}.`
-        );
+        onBook({
+            name,
+            phone,
+            date,
+            time
+        });
     };
 
     return (
@@ -36,44 +39,34 @@ const AppointmentForm = ({ doctorName, onClose }) => {
             </p>
 
             <form onSubmit={handleSubmit}>
-
                 <div className="form-group">
                     <label htmlFor="appointment-name">Name</label>
                     <input
                         type="text"
                         id="appointment-name"
-                        name="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter patient name"
                         required
                     />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="appointment-phone">
-                        Phone Number
-                    </label>
+                    <label htmlFor="appointment-phone">Phone Number</label>
                     <input
                         type="tel"
                         id="appointment-phone"
-                        name="phone"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Enter 10 digit phone number"
                         maxLength="10"
                         required
                     />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="appointment-date">
-                        Appointment Date
-                    </label>
+                    <label htmlFor="appointment-date">Appointment Date</label>
                     <input
                         type="date"
                         id="appointment-date"
-                        name="date"
                         value={date}
                         min={today}
                         onChange={(e) => setDate(e.target.value)}
@@ -82,13 +75,10 @@ const AppointmentForm = ({ doctorName, onClose }) => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="appointment-time">
-                        Appointment Time
-                    </label>
+                    <label htmlFor="appointment-time">Appointment Time</label>
                     <input
                         type="time"
                         id="appointment-time"
-                        name="time"
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
                         required
@@ -112,7 +102,6 @@ const AppointmentForm = ({ doctorName, onClose }) => {
                 {message && (
                     <p className="appointment-message">{message}</p>
                 )}
-
             </form>
         </div>
     );
