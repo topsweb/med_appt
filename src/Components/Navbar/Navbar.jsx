@@ -72,15 +72,22 @@ const Navbar = () => {
     </button>
 
     {profileMenuOpen && (
-        <div className="profile-dropdown">
-            <Link
-                to="/profile"
-                onClick={() => setProfileMenuOpen(false)}
-            >
-                My Profile
-            </Link>
-        </div>
-    )}
+    <div className="profile-dropdown">
+        <Link
+            to="/profile"
+            onClick={() => setProfileMenuOpen(false)}
+        >
+            My Profile
+        </Link>
+
+        <Link
+            to="/reports"
+            onClick={() => setProfileMenuOpen(false)}
+        >
+            Your Reports
+        </Link>
+    </div>
+)}
 </li>
 
                         <li className="link">
