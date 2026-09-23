@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayHealthy Sign Up</title>
+    <link rel="stylesheet" href="./Sign_Up.css">
+</head>
+
+<body>
+
+<div class="container">
+    <div class="signup-card">
+        <h1>Sign Up</h1>
+
+        <p class="login-link">
+            Already a member?
+            <a href="../Login/Login.html">Login</a>
+        </p>
+
+        <form>
+
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role" required class="form-control">
+                    <option value="">Select a role</option>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="form-control"
+                    placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    class="form-control"
+                    placeholder="Enter your phone number">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="form-control"
+                    placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    class="form-control"
+                    placeholder="Enter your password">
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
